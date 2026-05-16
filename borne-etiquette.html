@@ -320,6 +320,19 @@
     }
 
     header { position: relative; }
+
+    /* ---------- COMPTEUR ---------- */
+    .char-counter {
+        display: block;
+        text-align: right;
+        font-size: 13px;
+        color: #888;
+        margin-top: 6px;
+        font-weight: 600;
+    }
+
+    .char-counter.warn  { color: #f57c00; }
+    .char-counter.limit { color: #e91e63; }
 </style>
 </head>
 <body>
@@ -346,8 +359,9 @@
         <h2 id="panelTitle">Ton message</h2>
 
         <label for="messageInput" id="labelMessage">Texte personnalisé</label>
-        <textarea id="messageInput" maxlength="120" placeholder="Écris ton message ici…">Shh,
+        <textarea id="messageInput" maxlength="40" placeholder="Écris ton message ici…">Shh,
 niet delen!</textarea>
+        <span class="char-counter" id="charCounter">0 / 40</span>
 
         <label id="labelPresets">Suggestions rapides</label>
         <div class="presets" id="presets"></div>
@@ -387,6 +401,9 @@ niet delen!</textarea>
     const emojiGrid = document.getElementById('emojiGrid');
     const resetBtn = document.getElementById('resetBtn');
     const printBtn = document.getElementById('printBtn');
+    const charCounter = document.getElementById('charCounter');
+
+    const MAX_CHARS = 40;
 
     /* ---------- EMOJIS DISPONIBLES ---------- */
     const EMOJIS = [
@@ -489,6 +506,12 @@ niet delen!</textarea>
         preview.style.fontFamily = `'${fontSel.value}', cursive`;
         preview.style.fontSize   = sizeRng.value + 'px';
         sizeVal.textContent      = sizeRng.value;
+
+        // Compteur de caractères
+        const len = [...input.value].length; // gestion correcte des emojis
+        charCounter.textContent = `${len} / ${MAX_CHARS}`;
+        charCounter.classList.toggle('warn',  len >= MAX_CHARS - 8 && len < MAX_CHARS);
+        charCounter.classList.toggle('limit', len >= MAX_CHARS);
     }
 
     input.addEventListener('input', updatePreview);
